@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)https://jessesw.com/NLP-Movie-Reviews/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist</title>
+
+        
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    
+    <meta name="description" content="
+
+Source
+
+">
+    <meta property="og:description" content="
+
+Source
+
+">
+    
+    <meta name="author" content="Jesse Steinweg-Woods, Ph.D.">
+
+    
+    <meta property="og:title" content="Natural Language Processing in a Kaggle Competition for Movie Reviews">
+    <meta property="twitter:title" content="Natural Language Processing in a Kaggle Competition for Movie Reviews">
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="./Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist_files/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Jesse Steinweg-Woods, Ph.D. - Data Scientist" href="https://jessesw.com/feed.xml">
+
+    <script async="" src="./Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist_files/analytics.js.download"></script><script type="text/x-mathjax-config;executed=true">
+      MathJax.Hub.Config({
+      tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+                },
+      TeX: {
+      Macros: {
+      R: "\\mathbb{R}",
+      C: "\\mathbb{C}"
+      }}      
+      });
+     </script>
+    <script type="text/javascript" src="./Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist_files/MathJax.js.download"></script>
+
+  <script type="text/javascript" async="" src="./Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist_files/embed.js.download"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+  <body><div id="MathJax_Message" style="display: none;"></div>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="https://jessesw.com/" class="site-avatar"><img src="./Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist_files/SVM_image.png"></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="https://jessesw.com/">Jesse Steinweg-Woods, Ph.D.</a></h1>
+            <p class="site-description">Data Scientist</p>
+          </div>
+
+          <nav>
+            <a href="https://jessesw.com/">Blog</a>
+            <a href="https://jessesw.com/about">About</a>
+            <a href="https://jessesw.com/books">Book Reviews</a>
+            <a href="https://jessesw.com/websites">Websites</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Natural Language Processing in a Kaggle Competition for Movie Reviews</h1>
+
+  <div class="entry">
+    <!---
+<img src='/images/Proj2_images/Movie_thtr.jpg', width = 800, height = 600>
+-->
+<p><img src="./Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist_files/Movie_thtr.jpg" alt="" width="800px" height="600px">
+<a href="http://imgkid.com/movie-theater-wallpaper.shtml">Source</a></p>
+
+<p>I decided to try playing around with a Kaggle competition. In this case, I entered the <a href="http://www.kaggle.com/c/word2vec-nlp-tutorial">“When bag of words meets bags of popcorn”</a> contest. This contest isn’t for money; it is just a way to learn about various machine learning approaches.</p>
+
+<p>The competition was trying to showcase Google’s <a href="https://code.google.com/p/word2vec/">Word2Vec</a>. This essentially uses deep learning to find features in text that can be used to help in classification tasks. Specifically, in the case of this contest, the goal involves labeling the sentiment of a movie review from IMDB. Ratings were on a 10 point scale, and any review of 7 or greater was considered a positive movie review.</p>
+
+<p>Originally, I was going to try out Word2Vec and train it on unlabeled reviews, but then one of the competitors <a href="http://www.kaggle.com/c/word2vec-nlp-tutorial/forums/t/11261/beat-the-benchmark-with-shallow-learning-0-95-lb">pointed out</a> that you could simply use a less complicated classifier to do this and still get a good result.</p>
+
+<p>I decided to take this basic inspiration and try a few various classifiers to see what I could come up with. The highest my score received was 6th place back in December of 2014, but then people started using <a href="http://sebastianraschka.com/Articles/2014_ensemble_classifier.html">ensemble methods</a> to combine various models together and get a perfect score after a lot of fine tuning with the parameters of the ensemble weights.</p>
+
+<p>Hopefully, this post will help you understand some basic NLP (Natural Language Processing) techniques, along with some tips on using <a href="http://scikit-learn.org/stable/">scikit-learn</a> to make your classification models.</p>
+
+<h2 id="cleaning-the-reviews">Cleaning the Reviews</h2>
+
+<p>The first thing we need to do is create a simple function that will clean the reviews into a format we can use. We just want the raw text, not all of the other associated HTML, symbols, or other junk.</p>
+
+<p>We will need a couple of very nice libraries for this task: BeautifulSoup for taking care of anything HTML related and re for regular expressions.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span> 
+</code></pre>
+</div>
+<p>Now set up our function. This will clean all of the reviews for us.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">review_to_wordlist</span><span class="p">(</span><span class="n">review</span><span class="p">):</span>
+    <span class="s">'''
+    Meant for converting each of the IMDB reviews into a list of words.
+    '''</span>
+    <span class="c"># First remove the HTML.</span>
+    <span class="n">review_text</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">review</span><span class="p">)</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+        
+    <span class="c"># Use regular expressions to only include words.</span>
+    <span class="n">review_text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">"[^a-zA-Z]"</span><span class="p">,</span><span class="s">" "</span><span class="p">,</span> <span class="n">review_text</span><span class="p">)</span>
+        
+    <span class="c"># Convert words to lower case and split them into separate words.</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">review_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+       
+    <span class="c"># Return a list of words</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>Great! Now it is time to go ahead and load our data in. For this, pandas is definitely the library of choice. If you want to follow along with a downloaded version of the attached IPython notebook yourself, make sure you obtain the <a href="http://www.kaggle.com/c/word2vec-nlp-tutorial/data">data</a> from Kaggle. You will need a Kaggle account in order to access it.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+
+<span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'labeledTrainData.tsv'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">delimiter</span><span class="o">=</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'testData.tsv'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">,</span>
+                <span class="n">quoting</span><span class="o">=</span><span class="mi">3</span> <span class="p">)</span>
+                
+<span class="c"># Import both the training and test data.</span>
+</code></pre>
+</div>
+
+<p>Now it is time to get the labels from the training set for our reviews. That way, we can teach our classifier which reviews are positive vs. negative.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">y_train</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s">'sentiment'</span><span class="p">]</span>
+</code></pre>
+</div>
+<p>Now we need to clean both the train and test data to get it ready for the next part of our program.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">traindata</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s">'review'</span><span class="p">])):</span>
+    <span class="n">traindata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">review_to_wordlist</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s">'review'</span><span class="p">][</span><span class="n">i</span><span class="p">])))</span>
+    <span class="n">testdata</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s">'review'</span><span class="p">])):</span>
+        <span class="n">testdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">review_to_wordlist</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s">'review'</span><span class="p">][</span><span class="n">i</span><span class="p">])))</span>
+</code></pre>
+</div>
+
+<h2 id="tf-idf-vectorization">TF-IDF Vectorization</h2>
+
+<p>The next thing we are going to do is make TF-IDF (term frequency-interdocument frequency) vectors of our reviews. In case you are not familiar with what this is doing, essentially we are going to evaluate how often a certain term occurs in a review, but normalize this somewhat by how many reviews a certain term also occurs in. <a href="http://en.wikipedia.org/wiki/Tf%E2%80%93idf">Wikipedia</a> has an explanation that is sufficient if you want further information.</p>
+
+<p>This can be a great technique for helping to determine which words (or ngrams of words) will make good features to classify a review as positive or negative.</p>
+
+<p>To do this, we are going to use the TFIDF vectorizer from scikit-learn. Then, decide what settings to use. The documentation for the TFIDF class is available <a href="http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html">here</a>.</p>
+
+<p>In the case of the example code on Kaggle, they decided to remove all stop words, along with ngrams up to a size of two (you could use more but this will require a LOT of memory, so be careful which settings you use!)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span> <span class="k">as</span> <span class="n">TFIV</span>
+
+
+<span class="n">tfv</span> <span class="o">=</span> <span class="n">TFIV</span><span class="p">(</span><span class="n">min_df</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="n">max_features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
+        <span class="n">strip_accents</span><span class="o">=</span><span class="s">'unicode'</span><span class="p">,</span> <span class="n">analyzer</span><span class="o">=</span><span class="s">'word'</span><span class="p">,</span><span class="n">token_pattern</span><span class="o">=</span><span class="s">r'</span><span class="err">\</span><span class="s">w{1,}'</span><span class="p">,</span>
+        <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">use_idf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">smooth_idf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">sublinear_tf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">stop_words</span> <span class="o">=</span> <span class="s">'english'</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>Now that we have the vectorization object, we need to run this on all of the data (both training and testing) to make sure it is applied to both datasets. This could take some time on your computer!</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">X_all</span> <span class="o">=</span> <span class="n">traindata</span> <span class="o">+</span> <span class="n">testdata</span> <span class="c"># Combine both to fit the TFIDF vectorization.</span>
+<span class="n">lentrain</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">traindata</span><span class="p">)</span>
+
+<span class="n">tfv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_all</span><span class="p">)</span> <span class="c"># This is the slow part!</span>
+<span class="n">X_all</span> <span class="o">=</span> <span class="n">tfv</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_all</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">X_all</span><span class="p">[:</span><span class="n">lentrain</span><span class="p">]</span> <span class="c"># Separate back into training and test sets. </span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">X_all</span><span class="p">[</span><span class="n">lentrain</span><span class="p">:]</span>
+</code></pre>
+</div>
+
+<h2 id="making-our-classifiers">Making Our Classifiers</h2>
+
+<p>Because we are working with text data, and we just made feature vectors of every word (that isn’t a stop word of course) in all of the reviews, we are going to have sparse matrices to deal with that are quite large in size. Just to show you what I mean, let’s examine the shape of our training set.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</code></pre>
+</div>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="mi">25000</span><span class="p">,</span> <span class="mi">309798</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>That means we have 25,000 training examples (or rows) and 309,798 features (or columns). We need something that is going to be somewhat computationally efficient given how many features we have. Using something like a random forest to classify would be unwieldy (plus random forests can’t work with sparse matrices anyway yet in scikit-learn). That means we need something lightweight and fast that scales to many dimensions well. Some possible candidates are:</p>
+
+<ul>
+  <li>Naive Bayes</li>
+  <li>Logistic Regression</li>
+  <li>SGD Classifier (utilizes Stochastic Gradient Descent for much faster runtime)</li>
+</ul>
+
+<p>Let’s just try all three as submissions to Kaggle and see how they perform.</p>
+
+<p>First up: Logistic Regression (see the scikit-learn documentation <a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">here</a>).</p>
+
+<p>While in theory L1 regularization should work well because p»n (many more features than training examples), I actually found through a lot of testing that L2 regularization got better results. You could set up your own trials using scikit-learn’s built-in GridSearch class, which makes things a lot easier to try. I found through my testing that using a parameter C of 30 got the best results.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span> <span class="k">as</span> <span class="n">LR</span>
+<span class="kn">from</span> <span class="nn">sklearn.grid_search</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+
+<span class="n">grid_values</span> <span class="o">=</span> <span class="p">{</span><span class="s">'C'</span><span class="p">:[</span><span class="mi">30</span><span class="p">]}</span> <span class="c"># Decide which settings you want for the grid search. </span>
+    
+<span class="n">model_LR</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">LR</span><span class="p">(</span><span class="n">penalty</span> <span class="o">=</span> <span class="s">'L2'</span><span class="p">,</span> <span class="n">dual</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">),</span> 
+                        <span class="n">grid_values</span><span class="p">,</span> <span class="n">scoring</span> <span class="o">=</span> <span class="s">'roc_auc'</span><span class="p">,</span> <span class="n">cv</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> 
+<span class="c"># Try to set the scoring on what the contest is asking for. </span>
+<span class="c"># The contest says scoring is for area under the ROC curve, so use this.</span>
+                            
+<span class="n">model_LR</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span> <span class="c"># Fit the model.</span>
+</code></pre>
+</div>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">GridSearchCV</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> 
+             <span class="n">fit_intercept</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">intercept_scaling</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s">'L2'</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">),</span>
+        <span class="n">fit_params</span><span class="o">=</span><span class="p">{},</span> <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">loss_func</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">param_grid</span><span class="o">=</span><span class="p">{</span><span class="s">'C'</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">]},</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="s">'2*n_jobs'</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">score_func</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s">'roc_auc'</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>You can investigate which parameters did the best and what scores they received by looking at the model_LR object.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_LR</span><span class="o">.</span><span class="n">grid_scores_</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">mean</span><span class="p">:</span> <span class="mf">0.96459</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="mf">0.00489</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="p">{</span><span class="s">'C'</span><span class="p">:</span> <span class="mi">30</span><span class="p">}]</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_LR</span><span class="o">.</span><span class="n">best_estimator_</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">intercept_scaling</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s">'L2'</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Feel free, if you have an interactive version of the notebook, to play around with various settings inside the <i>grid_values</i> object to optimize your ROC AUC score. Otherwise, let’s move on to the next classifier, Naive Bayes.</p>
+
+<p>Unlike Logistic Regression, Naive Bayes doesn’t have a regularization parameter to tune. You just have to choose which “flavor” of Naive Bayes to use.</p>
+
+<p>According to the <a href="http://scikit-learn.org/0.13/modules/naive_bayes.html">documentation on Naive Bayes from scikit-learn</a>, Multinomial is our best version to use, since we no longer have just a 1 or 0 for a word feature: it has been normalized by TF-IDF, so our values will be BETWEEN 0 and 1 (most of the time, although having a few TF-IDF scores exceed 1 is technically possible). If we were just looking at word occurrence vectors (with no counting), Bernoulli would have been a better fit since it is based on binary values.</p>
+
+<p>Let’s make our Multinomial Naive Bayes object, and train it.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">MultinomialNB</span> <span class="k">as</span> <span class="n">MNB</span>
+
+
+<span class="n">model_NB</span> <span class="o">=</span> <span class="n">MNB</span><span class="p">()</span>
+<span class="n">model_NB</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">MultinomialNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">class_prior</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_prior</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Pretty fast, right? This speed comes at a price, however. Naive Bayes assumes all of your features are ENTIRELY independent from each other. In the case of word vectors, that seems like a somewhat reasonable assumption but with the ngrams we included that probably isn’t always the case. Because of this, Naive Bayes tends to be less accurate than other classification algorithms, especially if you have a smaller number of training examples.</p>
+
+<p>Why don’t we see how Naive Bayes does (at least in a 20 fold CV comparison) so we have a rough idea of how well it performs compared to our Logistic Regression classifier?</p>
+
+<p>You could use GridSearch again, but that seems like overkill. There is a simpler method we can import from scikit-learn for this task.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+
+<span class="k">print</span> <span class="s">"20 Fold CV Score for Multinomial Naive Bayes: "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cross_val_score</span>
+                                                                    <span class="p">(</span><span class="n">model_NB</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s">'roc_auc'</span><span class="p">))</span>
+<span class="c"># This will give us a 20-fold cross validation score that looks at ROC_AUC so we can compare with Logistic Regression. </span>
+</code></pre>
+</div>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="mi">20</span> <span class="n">Fold</span> <span class="n">CV</span> <span class="n">Score</span> <span class="k">for</span> <span class="n">Multinomial</span> <span class="n">Naive</span> <span class="n">Bayes</span><span class="p">:</span>  <span class="mf">0.949631232</span>
+</code></pre>
+</div>
+
+<p>Well, it wasn’t quite as good as our well-tuned Logistic Regression classifier, but that is a pretty good score considering how little we had to do!</p>
+
+<p>One last classifier to try is the <a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html">SGD classifier</a>, which comes in handy when you need speed on a really large number of training examples/features.</p>
+
+<p>Which machine learning algorithm it ends up using depends on what you set for the loss function. If we chose loss = ‘log’, it would essentially be identical to our previous logistic regression model. We want to try something different, but we also want a loss option that includes probabilities. We need those probabilities if we are going to be able to calculate the area under a ROC curve. Looking at the documentation, it seems a ‘modified_huber’ loss would do the trick! This will be a Support Vector Machine that uses a linear kernel.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span> <span class="k">as</span> <span class="n">SGD</span>
+
+
+<span class="n">sgd_params</span> <span class="o">=</span> <span class="p">{</span><span class="s">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.00006</span><span class="p">,</span> <span class="mf">0.00007</span><span class="p">,</span> <span class="mf">0.00008</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">]}</span> <span class="c"># Regularization parameter</span>
+    
+<span class="n">model_SGD</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SGD</span><span class="p">(</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="s">'modified_huber'</span><span class="p">),</span> <span class="n">sgd_params</span><span class="p">,</span> <span class="n">scoring</span> <span class="o">=</span> <span class="s">'roc_auc'</span><span class="p">,</span> <span class="n">cv</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="c"># Find out which regularization parameter works the best. </span>
+                            
+<span class="n">model_SGD</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="c"># Fit the model.</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">GridSearchCV</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">SGDClassifier</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">eta0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="s">'optimal'</span><span class="p">,</span>
+           <span class="n">loss</span><span class="o">=</span><span class="s">'modified_huber'</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s">'l2'</span><span class="p">,</span>
+           <span class="n">power_t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+           <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+           <span class="n">fit_params</span><span class="o">=</span><span class="p">{},</span> <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">loss_func</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+           <span class="n">param_grid</span><span class="o">=</span><span class="p">{</span><span class="s">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">6e-05</span><span class="p">,</span> <span class="mf">7e-05</span><span class="p">,</span> <span class="mf">8e-05</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">]},</span>
+           <span class="n">pre_dispatch</span><span class="o">=</span><span class="s">'2*n_jobs'</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">score_func</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+           <span class="n">scoring</span><span class="o">=</span><span class="s">'roc_auc'</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Again, similar to the Logistic Regression model, we can see which parameter did the best.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_SGD</span><span class="o">.</span><span class="n">grid_scores_</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">mean</span><span class="p">:</span> <span class="mf">0.96477</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="mf">0.00484</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="p">{</span><span class="s">'alpha'</span><span class="p">:</span> <span class="mf">6e-05</span><span class="p">},</span>
+<span class="n">mean</span><span class="p">:</span> <span class="mf">0.96484</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="mf">0.00481</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="p">{</span><span class="s">'alpha'</span><span class="p">:</span> <span class="mf">7e-05</span><span class="p">},</span>
+<span class="n">mean</span><span class="p">:</span> <span class="mf">0.96486</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="mf">0.00480</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="p">{</span><span class="s">'alpha'</span><span class="p">:</span> <span class="mf">8e-05</span><span class="p">},</span>
+<span class="n">mean</span><span class="p">:</span> <span class="mf">0.96479</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="mf">0.00480</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="p">{</span><span class="s">'alpha'</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">},</span>
+<span class="n">mean</span><span class="p">:</span> <span class="mf">0.95869</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="mf">0.00484</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="p">{</span><span class="s">'alpha'</span><span class="p">:</span> <span class="mf">0.0005</span><span class="p">}]</span>
+</code></pre>
+</div>
+
+<p>Looks like this beat our previous Logistic Regression model by a very small amount. Now that we have our three models, we can work on submitting our final scores in the proper format. It was found that submitting predicted probabilities of each score instead of the final predicted score worked better for evaluation from the contest participants, so we want to output this instead.</p>
+
+<p>First, do our Logistic Regression submission.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">LR_result</span> <span class="o">=</span> <span class="n">model_LR</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c"># We only need the probabilities that the movie review was a 7 or greater. </span>
+<span class="n">LR_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">"id"</span><span class="p">:</span><span class="n">test</span><span class="p">[</span><span class="s">"id"</span><span class="p">],</span> <span class="s">"sentiment"</span><span class="p">:</span><span class="n">LR_result</span><span class="p">})</span> <span class="c"># Create our dataframe that will be written.</span>
+<span class="n">LR_output</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'Logistic_Reg_Proj2.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="c"># Get the .csv file we will submit to Kaggle.</span>
+</code></pre>
+</div>
+<p>Repeat this with the other two.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># Repeat this for Multinomial Naive Bayes</span>
+
+<span class="n">MNB_result</span> <span class="o">=</span> <span class="n">model_NB</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">MNB_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">"id"</span><span class="p">:</span><span class="n">test</span><span class="p">[</span><span class="s">"id"</span><span class="p">],</span> <span class="s">"sentiment"</span><span class="p">:</span><span class="n">MNB_result</span><span class="p">})</span>
+<span class="n">MNB_output</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'MNB_Proj2.csv'</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">quoting</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+    
+<span class="c"># Last, do the Stochastic Gradient Descent model with modified Huber loss.</span>
+    
+<span class="n">SGD_result</span> <span class="o">=</span> <span class="n">model_SGD</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">SGD_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">"id"</span><span class="p">:</span><span class="n">test</span><span class="p">[</span><span class="s">"id"</span><span class="p">],</span> <span class="s">"sentiment"</span><span class="p">:</span><span class="n">SGD_result</span><span class="p">})</span>
+<span class="n">SGD_output</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'SGD_Proj2.csv'</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">quoting</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>Submitting the SGD result (using the linear SVM with modified Huber loss), I received a score of 0.95673 on the Kaggle <a href="http://www.kaggle.com/c/word2vec-nlp-tutorial/leaderboard">leaderboard</a>. That was good enough for sixth place back in December of 2014.</p>
+
+<h2 id="ideas-for-improvement-and-summary">Ideas for Improvement and Summary</h2>
+
+<p>In this post, we examined a text classification problem and cleaned unstructured review data. Next, we created a vector of features using TF-IDF normalization on a Bag of Words. We then trained these features on three different classifiers, some of which were optimized using 20-fold cross-validation, and made a submission to a Kaggle competition.</p>
+
+<p>Possible ideas for improvement:</p>
+
+<ul>
+  <li>Try increasing the number of ngrams to 3 or 4 in the TF-IDF vectorization and see if this makes a difference</li>
+  <li>Blend the models together into an ensemble that uses a majority vote for the classifiers</li>
+  <li>Try utilizing Word2Vec and creating feature vectors from the unlabeled training data. More data usually helps!</li>
+</ul>
+
+<p>If you would like the IPython Notebook for this blog post, you can find it <a href="http://nbviewer.ipython.org/github/jmsteinw/Notebooks/blob/master/NLP_Movies.ipynb">here.</a></p>
+
+  </div>
+
+  <div class="date">
+    Written on March 13, 2015
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"><iframe id="dsq-app1" name="dsq-app1" allowtransparency="true" frameborder="0" scrolling="no" tabindex="0" title="Disqus" width="100%" src="./Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist_files/saved_resource.html" style="width: 1px !important; min-width: 100% !important; border: none !important; overflow: hidden !important; height: 631px !important;" horizontalscrolling="no" verticalscrolling="no"></iframe></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'dswebsite';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the &lt;a href="http://disqus.com/?ref_noscript"&gt;comments powered by Disqus.&lt;/a&gt;</noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:jmsteinw@gmail.com"><i class="svg-icon email"></i></a>
+
+
+<a href="http://github.com/jmsteinw"><i class="svg-icon github"></i></a>
+
+<a href="http://linkedin.com/in/jmsteinw"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="http://twitter.com/jmsteinw"><i class="svg-icon twitter"></i></a>
+
+
+          <p style="font-size:14px">
+          © 2016 Jesse Steinweg-Woods -
+          Built with <a href="https://github.com/barryclark/jekyll-now">Jekyll Now</a> 
+          for <a href="http://jekyllrb.com/">Jekyll</a>
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-61005312-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/NLP-Movie-Reviews/',
+		  'title': 'Natural Language Processing in a Kaggle Competition for Movie Reviews'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  <script type="text/javascript">/* <![CDATA[ */(function(d,s,a,i,j,r,l,m,t){try{l=d.getElementsByTagName('a');t=d.createElement('textarea');for(i=0;l.length-i;i++){try{a=l[i].href;s=a.indexOf('/cdn-cgi/l/email-protection');m=a.length;if(a&&s>-1&&m>28){j=28+s;s='';if(j<m){r='0x'+a.substr(j,2)|0;for(j+=2;j<m&&a.charAt(j)!='X';j+=2)s+='%'+('0'+('0x'+a.substr(j,2)^r).toString(16)).slice(-2);j++;s=decodeURIComponent(s)+a.substr(j,m-j)}t.innerHTML=s.replace(/</g,'&lt;').replace(/>/g,'&gt;');l[i].href='mailto:'+t.value}}catch(e){}}}catch(e){}})(document);/* ]]> */</script>
+
+<iframe style="display: none;" src="./Natural Language Processing in a Kaggle Competition for Movie Reviews – Jesse Steinweg-Woods, Ph.D. – Data Scientist_files/saved_resource(1).html"></iframe></body></html>
